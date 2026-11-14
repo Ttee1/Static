@@ -1,0 +1,41 @@
+# Disable directory listing
+Options -Indexes
+
+# Ensure proper MIME types for ES modules, PDF.js worker (.mjs), fonts, PDFs, and video
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType text/css .css
+  AddType application/json .json
+  AddType application/pdf .pdf
+  AddType video/mp4 .mp4
+  AddType video/webm .webm
+  AddType video/quicktime .mov
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+</IfModule>
+
+# Route app URLs to index.html while serving real files/assets directly
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Enable Gzip compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# Browser caching for hashed bundles and media
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType application/pdf "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 1 month"
+</IfModule>

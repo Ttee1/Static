@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STATIC° Magazine — Issue 03: The Loud Issue</title>
+    <meta name="description" content="STATIC° Issue 03: A Magazine About Making Loud Things. Six departments, one obsession: type, film, render, code, object, brand." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      /**
+       * Defensive fetch stabilization script.
+       * Many cloud environments (like those inside sandboxed iframes) define window.fetch 
+       * as a read-only getter. When libraries (like Supabase or cross-fetch) attempt 
+       * to assign to window.fetch, it throws a TypeError.
+       */
+      (function() {
+        // Suppress the specific "getter only" error globally
+        function isFetchError(msg) {
+          return typeof msg === 'string' && 
+                 msg.indexOf('fetch') !== -1 && 
+                 (msg.indexOf('getter') !== -1 || msg.indexOf('read only') !== -1);
+        }
+
+        window.addEventListener('error', function(e) {
+          if (isFetchError(e.message)) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }, true);
+
+        window.addEventListener('unhandledrejection', function(e) {
+          var reason = e.reason;
+          var msg = (reason && (reason.message || reason.toString())) || '';
+          if (
+            msg.indexOf('WebSocket') !== -1 ||
+            msg.indexOf('websocket') !== -1 ||
+            msg.indexOf('WebSocket closed') !== -1
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+
+        window.onerror = function(msg) {
+          if (isFetchError(msg)) return true;
+        };
+
+        function stabilize(obj, prop) {
+          if (!obj || !(prop in obj)) return;
+          try {
+            var desc = Object.getOwnPropertyDescriptor(obj, prop);
+            // If it's not configurable, we can't do much with this descriptor
+            if (desc && desc.configurable === false) return;
+
+            var currentVal = obj[prop];
+            Object.defineProperty(obj, prop, {
+              get: function() { return currentVal; },
+              set: function(val) { currentVal = val; },
+              configurable: true,
+              enumerable: true
+            });
+          } catch (e) {
+            // Fallback for extremely restrictive environments
+            try {
+              obj[prop] = obj[prop]; 
+            } catch (e2) {}
+          }
+        }
+
+        // Try to stabilize fetch on multiple global targets
+        [window, globalThis, self, Object.getPrototypeOf(window)].forEach(function(target) {
+          stabilize(target, 'fetch');
+        });
+
+        // If assignment still fails, we've at least suppressed the uncaught exception.
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

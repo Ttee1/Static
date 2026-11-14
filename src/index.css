@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-anton: "Anton", sans-serif;
+  --font-archivo: "Archivo", sans-serif;
+  --font-sans: "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", "JetBrains Mono", monospace;
+  --color-brand-orange: #FF6A00;
+  --color-brand-pink: #FF2E85;
+  --color-brand-blue: #1B4DFF;
+  --color-brand-dark: #0B0B0B;
+  --color-brand-cream: #EDE9E0;
+}
+
+@layer base {
+  body {
+    @apply text-gray-900 antialiased;
+    background-color: #120E0B;
+  }
+}
+
+/* Drafting Paper Grid Overlays */
+.bg-grid-draft {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-grid-draft-dark {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Subtle crosshair and blueprint alignment marks */
+.blueprint-dot {
+  position: relative;
+}
+.blueprint-dot::after {
+  content: "+";
+  position: absolute;
+  font-family: inherit;
+  font-weight: 300;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.blueprint-dot-white::after {
+  content: "+";
+  position: absolute;
+  font-family: inherit;
+  font-weight: 300;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* Flipbook specific styles */
+.portfolio-book {
+  box-shadow: 
+    0 30px 70px -15px rgba(0, 0, 0, 0.85),
+    0 15px 30px -8px rgba(0, 0, 0, 0.7),
+    0 4px 10px 0 rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s ease, box-shadow 0.6s ease;
+  transform: translateZ(0);
+}
+
+.is-front-cover .portfolio-book {
+  transform: translateX(-25%) translateZ(0);
+  box-shadow: 
+    0 24px 50px -12px rgba(0, 0, 0, 0.85),
+    0 12px 24px -6px rgba(0, 0, 0, 0.65);
+}
+
+.is-back-cover .portfolio-book {
+  transform: translateX(25%) translateZ(0);
+  box-shadow: 
+    0 24px 50px -12px rgba(0, 0, 0, 0.85),
+    0 12px 24px -6px rgba(0, 0, 0, 0.65);
+}
+
+.page {
+  background-color: #0E1013;
+  border-radius: 2px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.page-content {
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+  border-radius: 2px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Force crisp, high-quality image rendering across modern web engines */
+.portfolio-book img,
+.page-content img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Simulate page thickness and shadow in the gutter - disabled on covers */
+.page:not(.is-cover) .page-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 36px;
+  background: linear-gradient(to right, rgba(0,0,0,0.18), transparent);
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* For right-hand pages, put shadow on the right side of the left edge */
+.page:not(.is-cover):nth-child(even) .page-content::before {
+  left: auto;
+  right: 0;
+  background: linear-gradient(to left, rgba(0,0,0,0.18), transparent);
+}
+
+/* Platform effect */
+.flipbook-surface {
+  position: relative;
+}
+
+.flipbook-surface::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 5%;
+  width: 90%;
+  height: 40px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, transparent 70%);
+  filter: blur(15px);
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.flipbook-surface.is-closed::after {
+  opacity: 0.4;
+  transform: scaleY(0.5);
+}
+
+/* Hard pages (covers) */
+.page[data-density="hard"] {
+  background-color: #f0f0f0;
+}
+
+.page-content img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Custom scrollbar for the page content if needed */
+.page-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.page-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.page-content::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
